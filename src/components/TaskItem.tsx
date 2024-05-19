@@ -40,7 +40,7 @@ const TaskItem: React.FC<Props> = ({ task, listId, updateTask, deleteTask }) => 
 
   return (
     <>
-      <ListItem>
+      <ListItem style={{ backgroundColor: '#f5f5f5', marginBottom: '10px' }}>
         <ListItemText primary={task.text} secondary={task.description} />
         <IconButton onClick={handleEdit}>
           <EditIcon />
