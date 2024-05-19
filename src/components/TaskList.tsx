@@ -27,7 +27,7 @@ interface Props {
   deleteTask: (listId: number, taskId: number) => void;
   toggleTask: (listId: number, taskId: number) => void;
   deleteList: (listId: number) => void;
-  updateListTitle: (listId: number, newTitle: string) => void; // Adicionando prop para atualizar o título da lista
+  updateListTitle: (listId: number, newTitle: string) => void;
 }
 
 const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, toggleTask, deleteList, updateListTitle }) => {
@@ -39,7 +39,7 @@ const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, togg
   };
 
   const handleSaveTitle = () => {
-    updateListTitle(list.id, title); // Chamando a função para atualizar o título da lista
+    updateListTitle(list.id, title);
     setIsEditingTitle(false);
   };
 
@@ -77,21 +77,23 @@ const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, togg
             </IconButton>
           </Grid>
         </Grid>
-        <TaskForm listId={list.id} addTask={addTask} />
-        {list.tasks.map((task, index) => (
-          <Draggable key={task.id} draggableId={String(task.id)} index={index}>
-            {(provided: DraggableProvided) => (
-              <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                <TaskItem
-                  task={task}
-                  listId={list.id}
-                  updateTask={updateTask}
-                  deleteTask={deleteTask}
-                />
-              </div>
-            )}
-          </Draggable>
-        ))}
+        <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+          <TaskForm listId={list.id} addTask={addTask} />
+          {list.tasks.map((task, index) => (
+            <Draggable key={task.id} draggableId={String(task.id)} index={index}>
+              {(provided: DraggableProvided) => (
+                <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                  <TaskItem
+                    task={task}
+                    listId={list.id}
+                    updateTask={updateTask}
+                    deleteTask={deleteTask}
+                  />
+                </div>
+              )}
+            </Draggable>
+          ))}
+        </div>
       </CardContent>
     </Card>
   );
