@@ -1,31 +1,43 @@
 import React, { useState } from 'react';
 import { Container, Typography } from '@mui/material';
-import TodoForm from './components/TodoForm';
-import TodoList from './components/TodoList';
+import Board from './components/Board';
 
-interface Todo {
+interface Task {
   id: number;
   text: string;
   completed: boolean;
 }
 
-const App: React.FC = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+interface List {
+  id: number;
+  title: string;
+  tasks: Task[];
+}
 
-  const addTodo = (text: string) => {
-    const newTodo: Todo = { id: Date.now(), text, completed: false };
-    setTodos([...todos, newTodo]);
+const App: React.FC = () => {
+  const [lists, setLists] = useState<List[]>([]);
+
+  const addList = (title: string) => {
+    const newList: List = { id: Date.now(), title, tasks: [] };
+    setLists([...lists, newList]);
   };
 
-  const toggleTodo = (id: number) => {
-    setTodos(todos.map(todo => todo.id === id ? { ...todo, completed: !todo.completed } : todo));
+  const addTask = (listId: number, text: string) => {
+    const newTask: Task = { id: Date.now(), text, completed: false };
+    setLists(lists.map(list => list.id === listId ? { ...list, tasks: [...list.tasks, newTask] } : list));
+  };
+
+  const toggleTask = (listId: number, taskId: number) => {
+    setLists(lists.map(list => list.id === listId ? {
+      ...list,
+      tasks: list.tasks.map(task => task.id === taskId ? { ...task, completed: !task.completed } : task)
+    } : list));
   };
 
   return (
     <Container>
-      <Typography variant="h4" gutterBottom>To-Do List</Typography>
-      <TodoForm addTodo={addTodo} />
-      <TodoList todos={todos} toggleTodo={toggleTodo} />
+      <Typography variant="h4" gutterBottom>Task Board</Typography>
+      <Board lists={lists} addList={addList} addTask={addTask} toggleTask={toggleTask} />
     </Container>
   );
 };

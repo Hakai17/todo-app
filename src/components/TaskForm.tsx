@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import { TextField, Button } from '@mui/material';
 
 interface Props {
-  addTodo: (text: string) => void;
+  listId: number;
+  addTask: (listId: number, text: string) => void;
 }
 
-const TodoForm: React.FC<Props> = ({ addTodo }) => {
+const TaskForm: React.FC<Props> = ({ listId, addTask }) => {
   const [text, setText] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (text.trim()) {
-      addTodo(text);
+      addTask(listId, text);
       setText('');
     }
   };
@@ -31,4 +32,4 @@ const TodoForm: React.FC<Props> = ({ addTodo }) => {
   );
 };
 
-export default TodoForm;
+export default TaskForm;
