@@ -1,3 +1,5 @@
+// Board.tsx
+
 import React from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { Grid } from '@mui/material';
@@ -25,10 +27,11 @@ interface Props {
   deleteTask: (listId: number, taskId: number) => void;
   toggleTask: (listId: number, taskId: number) => void;
   deleteList: (listId: number) => void;
+  updateListTitle: (listId: number, newTitle: string) => void; // Adicionando prop para atualizar o título da lista
   onDragEnd: (result: any) => void;
 }
 
-const Board: React.FC<Props> = ({ lists, addList, addTask, updateTask, deleteTask, toggleTask, deleteList, onDragEnd }) => {
+const Board: React.FC<Props> = ({ lists, addList, addTask, updateTask, deleteTask, toggleTask, deleteList, updateListTitle, onDragEnd }) => {
   return (
     <div>
       <ListForm addList={addList} />
@@ -46,6 +49,7 @@ const Board: React.FC<Props> = ({ lists, addList, addTask, updateTask, deleteTas
                       deleteTask={deleteTask}
                       toggleTask={toggleTask}
                       deleteList={deleteList}
+                      updateListTitle={updateListTitle}
                     />
                     {provided.placeholder}
                   </div>

@@ -1,3 +1,5 @@
+// App.tsx
+
 import React, { useState } from 'react';
 import { Container, Typography } from '@mui/material';
 import Board from './components/Board';
@@ -53,6 +55,10 @@ const App: React.FC = () => {
     setLists(lists.filter(list => list.id !== listId));
   };
 
+  const updateListTitle = (listId: number, newTitle: string) => {
+    setLists(lists.map(list => list.id === listId ? { ...list, title: newTitle } : list));
+  };
+
   const onDragEnd = (result: any) => {
     const { source, destination } = result;
 
@@ -95,6 +101,7 @@ const App: React.FC = () => {
         deleteTask={deleteTask}
         toggleTask={toggleTask}
         deleteList={deleteList}
+        updateListTitle={updateListTitle}
         onDragEnd={onDragEnd}
       />
     </Container>

@@ -1,5 +1,7 @@
-import React from 'react';
-import { Card, CardContent, Typography, IconButton } from '@mui/material';
+// TaskList.tsx
+
+import React, { useState } from 'react';
+import { Card, CardContent, Typography, IconButton, TextField, Button, Grid } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TaskForm from './TaskForm';
 import TaskItem from './TaskItem';
@@ -25,9 +27,26 @@ interface Props {
   deleteTask: (listId: number, taskId: number) => void;
   toggleTask: (listId: number, taskId: number) => void;
   deleteList: (listId: number) => void;
+  updateListTitle: (listId: number, newTitle: string) => void; // Adicionando prop para atualizar o título da lista
 }
 
-const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, toggleTask, deleteList }) => {
+const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, toggleTask, deleteList, updateListTitle }) => {
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [title, setTitle] = useState(list.title);
+
+  const handleEditTitle = () => {
+    setIsEditingTitle(true);
+  };
+
+  const handleSaveTitle = () => {
+    updateListTitle(list.id, title); // Chamando a função para atualizar o título da lista
+    setIsEditingTitle(false);
+  };
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
+
   const handleDeleteList = () => {
     deleteList(list.id);
   };
@@ -35,12 +54,29 @@ const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, togg
   return (
     <Card>
       <CardContent>
-        <Typography variant="h5" gutterBottom>
-          {list.title}
-          <IconButton onClick={handleDeleteList} style={{ float: 'right' }}>
-            <DeleteIcon />
-          </IconButton>
-        </Typography>
+        <Grid container alignItems="center" justifyContent="space-between">
+          <Grid item>
+            {isEditingTitle ? (
+              <div>
+                <TextField
+                  value={title}
+                  onChange={handleTitleChange}
+                  size="small"
+                />
+                <Button onClick={handleSaveTitle} size="small">Save</Button>
+              </div>
+            ) : (
+              <Typography variant="h5" gutterBottom onClick={handleEditTitle}>
+                {list.title}
+              </Typography>
+            )}
+          </Grid>
+          <Grid item>
+            <IconButton onClick={handleDeleteList}>
+              <DeleteIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
         <TaskForm listId={list.id} addTask={addTask} />
         {list.tasks.map((task, index) => (
           <Draggable key={task.id} draggableId={String(task.id)} index={index}>
