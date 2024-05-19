@@ -14,6 +14,7 @@ interface Props {
   listId: number;
   updateTask: (listId: number, taskId: number, text: string, description: string) => void;
   deleteTask: (listId: number, taskId: number) => void;
+  toggleTask: (listId: number, taskId: number) => void;
 }
 
 const TaskItem: React.FC<Props> = ({ task, listId, updateTask, deleteTask }) => {

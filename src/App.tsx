@@ -1,7 +1,5 @@
-// App.tsx
-
 import React, { useState } from 'react';
-import { Container, Typography } from '@mui/material';
+import { DropResult } from 'react-beautiful-dnd';
 import Board from './components/Board';
 
 interface Task {
@@ -18,37 +16,67 @@ interface List {
 }
 
 const App: React.FC = () => {
-  const [lists, setLists] = useState<List[]>([]);
+  const [lists, setLists] = useState<List[]>([
+    // Initial state with some lists and tasks
+  ]);
 
   const addList = (title: string) => {
-    const newList: List = { id: Date.now(), title, tasks: [] };
+    const newList: List = {
+      id: Date.now(),
+      title,
+      tasks: []
+    };
     setLists([...lists, newList]);
   };
 
   const addTask = (listId: number, text: string) => {
-    const newTask: Task = { id: Date.now(), text, description: '', completed: false };
-    setLists(lists.map(list => list.id === listId ? { ...list, tasks: [...list.tasks, newTask] } : list));
+    const newTask: Task = {
+      id: Date.now(),
+      text,
+      description: '',
+      completed: false
+    };
+    const updatedLists = lists.map(list =>
+      list.id === listId ? { ...list, tasks: [...list.tasks, newTask] } : list
+    );
+    setLists(updatedLists);
   };
 
   const updateTask = (listId: number, taskId: number, text: string, description: string) => {
-    setLists(lists.map(list => list.id === listId ? {
-      ...list,
-      tasks: list.tasks.map(task => task.id === taskId ? { ...task, text, description } : task)
-    } : list));
+    const updatedLists = lists.map(list =>
+      list.id === listId
+        ? {
+            ...list,
+            tasks: list.tasks.map(task =>
+              task.id === taskId ? { ...task, text, description } : task
+            )
+          }
+        : list
+    );
+    setLists(updatedLists);
   };
 
   const deleteTask = (listId: number, taskId: number) => {
-    setLists(lists.map(list => list.id === listId ? {
-      ...list,
-      tasks: list.tasks.filter(task => task.id !== taskId)
-    } : list));
+    const updatedLists = lists.map(list =>
+      list.id === listId
+        ? { ...list, tasks: list.tasks.filter(task => task.id !== taskId) }
+        : list
+    );
+    setLists(updatedLists);
   };
 
   const toggleTask = (listId: number, taskId: number) => {
-    setLists(lists.map(list => list.id === listId ? {
-      ...list,
-      tasks: list.tasks.map(task => task.id === taskId ? { ...task, completed: !task.completed } : task)
-    } : list));
+    const updatedLists = lists.map(list =>
+      list.id === listId
+        ? {
+            ...list,
+            tasks: list.tasks.map(task =>
+              task.id === taskId ? { ...task, completed: !task.completed } : task
+            )
+          }
+        : list
+    );
+    setLists(updatedLists);
   };
 
   const deleteList = (listId: number) => {
@@ -56,55 +84,71 @@ const App: React.FC = () => {
   };
 
   const updateListTitle = (listId: number, newTitle: string) => {
-    setLists(lists.map(list => list.id === listId ? { ...list, title: newTitle } : list));
+    const updatedLists = lists.map(list =>
+      list.id === listId ? { ...list, title: newTitle } : list
+    );
+    setLists(updatedLists);
   };
 
-  const onDragEnd = (result: any) => {
-    const { source, destination } = result;
+  const onDragEnd = (result: DropResult) => {
+    const { source, destination, draggableId, type } = result;
 
-    if (!destination) return;
-
-    if (source.droppableId === destination.droppableId) {
-      const list = lists.find(list => list.id === parseInt(source.droppableId));
-      if (!list) return;
-      const tasks = Array.from(list.tasks);
-      const [movedTask] = tasks.splice(source.index, 1);
-      tasks.splice(destination.index, 0, movedTask);
-
-      setLists(lists.map(l => l.id === list.id ? { ...l, tasks } : l));
-    } else {
-      const sourceList = lists.find(list => list.id === parseInt(source.droppableId));
-      const destinationList = lists.find(list => list.id === parseInt(destination.droppableId));
-      if (!sourceList || !destinationList) return;
-
-      const sourceTasks = Array.from(sourceList.tasks);
-      const [movedTask] = sourceTasks.splice(source.index, 1);
-      const destinationTasks = Array.from(destinationList.tasks);
-      destinationTasks.splice(destination.index, 0, movedTask);
-
-      setLists(lists.map(list => {
-        if (list.id === sourceList.id) return { ...list, tasks: sourceTasks };
-        if (list.id === destinationList.id) return { ...list, tasks: destinationTasks };
-        return list;
-      }));
+    if (!destination) {
+      return;
     }
+
+    if (type === 'list') {
+      // Handle list reordering if needed
+      return;
+    }
+
+    const sourceListId = parseInt(source.droppableId, 10);
+    const destinationListId = parseInt(destination.droppableId, 10);
+
+    const sourceList = lists.find(list => list.id === sourceListId);
+    const destinationList = lists.find(list => list.id === destinationListId);
+
+    if (!sourceList || !destinationList) {
+      return;
+    }
+
+    const task = sourceList.tasks.find(task => task.id === parseInt(draggableId, 10));
+
+    if (!task) {
+      return;
+    }
+
+    const newSourceTasks = Array.from(sourceList.tasks);
+    newSourceTasks.splice(source.index, 1);
+
+    const newDestinationTasks = Array.from(destinationList.tasks);
+    newDestinationTasks.splice(destination.index, 0, task);
+
+    const newLists = lists.map(list => {
+      if (list.id === sourceListId) {
+        return { ...list, tasks: newSourceTasks };
+      }
+      if (list.id === destinationListId) {
+        return { ...list, tasks: newDestinationTasks };
+      }
+      return list;
+    });
+
+    setLists(newLists);
   };
 
   return (
-    <Container>
-      <Typography variant="h4" gutterBottom>Task Board</Typography>
-      <Board
-        lists={lists}
-        addList={addList}
-        addTask={addTask}
-        updateTask={updateTask}
-        deleteTask={deleteTask}
-        toggleTask={toggleTask}
-        deleteList={deleteList}
-        updateListTitle={updateListTitle}
-        onDragEnd={onDragEnd}
-      />
-    </Container>
+    <Board
+      lists={lists}
+      addList={addList}
+      addTask={addTask}
+      updateTask={updateTask}
+      deleteTask={deleteTask}
+      toggleTask={toggleTask}
+      deleteList={deleteList}
+      updateListTitle={updateListTitle}
+      onDragEnd={onDragEnd}
+    />
   );
 };
 

@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { TextField, Button } from '@mui/material';
 
 interface Props {
-  listId: number;
   addTask: (listId: number, text: string) => void;
+  listId: number;
 }
 
-const TaskForm: React.FC<Props> = ({ listId, addTask }) => {
+const TaskForm: React.FC<Props> = ({ addTask, listId }) => {
   const [text, setText] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {

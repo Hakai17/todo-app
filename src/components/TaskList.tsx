@@ -1,11 +1,9 @@
-// TaskList.tsx
-
 import React, { useState } from 'react';
 import { Card, CardContent, Typography, IconButton, TextField, Button, Grid } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TaskForm from './TaskForm';
 import TaskItem from './TaskItem';
-import { Draggable, DraggableProvided } from 'react-beautiful-dnd';
+import { Draggable, Droppable, DraggableProvided } from 'react-beautiful-dnd';
 
 interface Task {
   id: number;
@@ -52,21 +50,17 @@ const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, togg
   };
 
   return (
-    <Card style={{ backgroundColor: '#e6e6e6', marginBottom: '20px' }}>
+    <Card style={{ backgroundColor: '#e6e6e6', marginBottom: '20px', minWidth: '300px' }}>
       <CardContent>
         <Grid container alignItems="center" justifyContent="space-between">
           <Grid item>
             {isEditingTitle ? (
               <div>
-                <TextField
-                  value={title}
-                  onChange={handleTitleChange}
-                  size="small"
-                />
-                <Button onClick={handleSaveTitle} size="small">Save</Button>
+                <TextField value={title} onChange={handleTitleChange} />
+                <Button onClick={handleSaveTitle}>Save</Button>
               </div>
             ) : (
-              <Typography variant="h5" gutterBottom onClick={handleEditTitle}>
+              <Typography variant="h5" onClick={handleEditTitle}>
                 {list.title}
               </Typography>
             )}
@@ -77,23 +71,34 @@ const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, togg
             </IconButton>
           </Grid>
         </Grid>
-        <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
-          <TaskForm listId={list.id} addTask={addTask} />
-          {list.tasks.map((task, index) => (
-            <Draggable key={task.id} draggableId={String(task.id)} index={index}>
-              {(provided: DraggableProvided) => (
-                <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                  <TaskItem
-                    task={task}
-                    listId={list.id}
-                    updateTask={updateTask}
-                    deleteTask={deleteTask}
-                  />
-                </div>
-              )}
-            </Draggable>
-          ))}
-        </div>
+        <TaskForm listId={list.id} addTask={addTask} />
+        <Droppable droppableId={String(list.id)} type="task">
+          {(provided) => (
+            <div ref={provided.innerRef} {...provided.droppableProps} style={{ marginTop: '10px', maxHeight: '400px', overflowY: 'auto' }}>
+              {list.tasks.map((task, index) => (
+                <Draggable key={task.id} draggableId={String(task.id)} index={index}>
+                  {(provided: DraggableProvided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={{ marginBottom: '8px', ...provided.draggableProps.style }}
+                    >
+                      <TaskItem
+                        task={task}
+                        listId={list.id}
+                        updateTask={updateTask}
+                        deleteTask={deleteTask}
+                        toggleTask={toggleTask}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
       </CardContent>
     </Card>
   );

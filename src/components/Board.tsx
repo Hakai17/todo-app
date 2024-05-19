@@ -1,8 +1,5 @@
-// Board.tsx
-
 import React from 'react';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import { Grid } from '@mui/material';
+import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import ListForm from './ListForm';
 import TaskList from './TaskList';
 
@@ -27,8 +24,8 @@ interface Props {
   deleteTask: (listId: number, taskId: number) => void;
   toggleTask: (listId: number, taskId: number) => void;
   deleteList: (listId: number) => void;
-  updateListTitle: (listId: number, newTitle: string) => void; // Adicionando prop para atualizar o título da lista
-  onDragEnd: (result: any) => void;
+  updateListTitle: (listId: number, newTitle: string) => void;
+  onDragEnd: (result: DropResult) => void;
 }
 
 const Board: React.FC<Props> = ({ lists, addList, addTask, updateTask, deleteTask, toggleTask, deleteList, updateListTitle, onDragEnd }) => {
@@ -36,28 +33,26 @@ const Board: React.FC<Props> = ({ lists, addList, addTask, updateTask, deleteTas
     <div>
       <ListForm addList={addList} />
       <DragDropContext onDragEnd={onDragEnd}>
-        <Grid container spacing={3}>
-          {lists.map(list => (
-            <Grid item key={list.id} xs={12} md={6} lg={4}>
-              <Droppable droppableId={String(list.id)}>
-                {(provided) => (
-                  <div ref={provided.innerRef} {...provided.droppableProps}>
-                    <TaskList
-                      list={list}
-                      addTask={addTask}
-                      updateTask={updateTask}
-                      deleteTask={deleteTask}
-                      toggleTask={toggleTask}
-                      deleteList={deleteList}
-                      updateListTitle={updateListTitle}
-                    />
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </Grid>
-          ))}
-        </Grid>
+        <Droppable droppableId="board" direction="horizontal" type="list">
+          {(provided) => (
+            <div ref={provided.innerRef} {...provided.droppableProps} style={{ display: 'flex', overflowX: 'auto' }}>
+              {lists.map((list, index) => (
+                <div key={list.id} style={{ margin: '0 10px' }}>
+                  <TaskList
+                    list={list}
+                    addTask={addTask}
+                    updateTask={updateTask}
+                    deleteTask={deleteTask}
+                    toggleTask={toggleTask}
+                    deleteList={deleteList}
+                    updateListTitle={updateListTitle}
+                  />
+                </div>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
       </DragDropContext>
     </div>
   );
