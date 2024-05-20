@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ListItem, ListItemText, IconButton, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Button, Chip, Autocomplete } from '@mui/material';
+import { ListItem, ListItemText, IconButton, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Button, Chip, MenuItem, Select, Autocomplete } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import PersonIcon from '@mui/icons-material/Person';
@@ -10,6 +10,7 @@ interface Task {
   description: string;
   completed: boolean;
   members: { id: number; name: string }[];
+  labels: { id: number; text: string; color: string }[];
 }
 
 const members = [
@@ -21,7 +22,7 @@ const members = [
 interface Props {
   task: Task;
   listId: number;
-  updateTask: (listId: number, taskId: number, text: string, description: string, members: { id: number; name: string }[]) => void;
+  updateTask: (listId: number, taskId: number, text: string, description: string, members: { id: number; name: string }[], labels: { id: number; text: string; color: string }[]) => void;
   deleteTask: (listId: number, taskId: number) => void;
   toggleTask: (listId: number, taskId: number) => void;
 }
@@ -31,6 +32,7 @@ const TaskItem: React.FC<Props> = ({ task, listId, updateTask, deleteTask }) => 
   const [text, setText] = useState(task.text);
   const [description, setDescription] = useState(task.description);
   const [selectedMembers, setSelectedMembers] = useState(task.members);
+  const [labels, setLabels] = useState(task.labels);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -41,7 +43,7 @@ const TaskItem: React.FC<Props> = ({ task, listId, updateTask, deleteTask }) => 
   };
 
   const handleSave = () => {
-    updateTask(listId, task.id, text, description, selectedMembers);
+    updateTask(listId, task.id, text, description, selectedMembers, labels);
     setIsEditing(false);
   };
 
@@ -49,10 +51,23 @@ const TaskItem: React.FC<Props> = ({ task, listId, updateTask, deleteTask }) => 
     deleteTask(listId, task.id);
   };
 
+  const handleAddLabel = () => {
+    const newLabel = { id: Date.now(), text: '', color: 'default' };
+    setLabels([...labels, newLabel]);
+  };
+
+  const handleLabelChange = (id: number, key: string, value: string) => {
+    setLabels(labels.map(label => label.id === id ? { ...label, [key]: value } : label));
+  };
+
+  const handleDeleteLabel = (id: number) => {
+    setLabels(labels.filter(label => label.id !== id));
+  };
+
   return (
     <>
       <ListItem style={{ backgroundColor: '#f5f5f5', marginBottom: '10px' }}>
-        <ListItemText
+      <ListItemText
           primary={
             <>
               <div>
@@ -71,6 +86,11 @@ const TaskItem: React.FC<Props> = ({ task, listId, updateTask, deleteTask }) => 
           }
           secondary={task.description}
         />
+        <div>
+          {labels.map(label => (
+            <Chip key={label.id} label={label.text} style={{ backgroundColor: label.color, color: '#fff' }} />
+          ))}
+        </div>
         <IconButton onClick={handleEdit}>
           <EditIcon />
         </IconButton>
@@ -113,6 +133,38 @@ const TaskItem: React.FC<Props> = ({ task, listId, updateTask, deleteTask }) => 
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
+          <div>
+            <Button onClick={handleAddLabel} color="primary">
+              Add Label
+            </Button>
+            {labels.map(label => (
+              <div key={label.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                <TextField
+                  margin="dense"
+                  label="Label Text"
+                  type="text"
+                  value={label.text}
+                  onChange={(e) => handleLabelChange(label.id, 'text', e.target.value)}
+                  style={{ marginRight: '10px' }}
+                />
+                <Select
+                  value={label.color}
+                  onChange={(e) => handleLabelChange(label.id, 'color', e.target.value as string)}
+                  style={{ marginRight: '10px' }}
+                >
+                  <MenuItem value="default">Default</MenuItem>
+                  <MenuItem value="red">Red</MenuItem>
+                  <MenuItem value="green">Green</MenuItem>
+                  <MenuItem value="blue">Blue</MenuItem>
+                  <MenuItem value="yellow">Yellow</MenuItem>
+                  <MenuItem value="purple">Purple</MenuItem>
+                </Select>
+                <IconButton onClick={() => handleDeleteLabel(label.id)}>
+                  <DeleteIcon />
+                </IconButton>
+              </div>
+            ))}
+          </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">

@@ -11,27 +11,28 @@ interface Task {
   description: string;
   completed: boolean;
   members: { id: number; name: string }[];
+  labels: { id: number; text: string; color: string }[];
 }
 
-interface List {
+interface Lists {
   id: number;
   title: string;
   tasks: Task[];
 }
 
 interface Props {
-  list: List;
+  lists: Lists;
   addTask: (listId: number, text: string) => void;
-  updateTask: (listId: number, taskId: number, text: string, description: string, members: { id: number; name: string }[]) => void;
+  updateTask: (listId: number, taskId: number, text: string, description: string, members: { id: number; name: string }[], labels: { id: number; text: string; color: string }[]) => void;
   deleteTask: (listId: number, taskId: number) => void;
   toggleTask: (listId: number, taskId: number) => void;
   deleteList: (listId: number) => void;
   updateListTitle: (listId: number, newTitle: string) => void;
 }
 
-const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, toggleTask, deleteList, updateListTitle }) => {
+const TaskList: React.FC<Props> = ({ lists, addTask, updateTask, deleteTask, toggleTask, deleteList, updateListTitle }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const [title, setTitle] = useState(list.title);
+  const [title, setTitle] = useState(lists.title);
   const titleInputRef = useRef<HTMLInputElement>(null);
 
   const handleEditTitle = () => {
@@ -42,7 +43,7 @@ const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, togg
   };
 
   const handleSaveTitle = () => {
-    updateListTitle(list.id, title);
+    updateListTitle(lists.id, title);
     setIsEditingTitle(false);
   };
 
@@ -57,7 +58,7 @@ const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, togg
   };
 
   const handleDeleteList = () => {
-    deleteList(list.id);
+    deleteList(lists.id);
   };
 
   return (
@@ -74,7 +75,7 @@ const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, togg
               />
             ) : (
               <Typography variant="h5" onClick={handleEditTitle}>
-                {list.title}
+                {lists.title}
               </Typography>
             )}
           </Grid>
@@ -84,10 +85,10 @@ const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, togg
             </IconButton>
           </Grid>
         </Grid>
-        <Droppable droppableId={String(list.id)} type="task">
+        <Droppable droppableId={String(lists.id)} type="task">
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps} style={{ marginTop: '10px', maxHeight: '400px', overflowY: 'auto' }}>
-              {list.tasks.map((task, index) => (
+              {lists.tasks.map((task, index) => (
                 <Draggable key={task.id} draggableId={String(task.id)} index={index}>
                   {(provided: DraggableProvided) => (
                     <div
@@ -98,7 +99,7 @@ const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, togg
                     >
                       <TaskItem
                         task={task}
-                        listId={list.id}
+                        listId={lists.id}
                         updateTask={updateTask}
                         deleteTask={deleteTask}
                         toggleTask={toggleTask}
@@ -111,7 +112,7 @@ const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, togg
             </div>
           )}
         </Droppable>
-        <TaskForm listId={list.id} addTask={addTask} />
+        <TaskForm listId={lists.id} addTask={addTask} />
       </CardContent>
     </Card>
   );
