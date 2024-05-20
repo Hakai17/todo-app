@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Card, CardContent, Typography, IconButton, TextField, Button, Grid } from '@mui/material';
+import React, { useState, useRef } from 'react';
+import { Card, CardContent, Typography, IconButton, TextField, Grid } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TaskForm from './TaskForm';
 import TaskItem from './TaskItem';
@@ -31,9 +31,14 @@ interface Props {
 const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, toggleTask, deleteList, updateListTitle }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [title, setTitle] = useState(list.title);
+  const titleInputRef = useRef<HTMLInputElement>(null);
 
   const handleEditTitle = () => {
     setIsEditingTitle(true);
+    // Focar no input do título quando começar a edição
+    if (titleInputRef.current) {
+      titleInputRef.current.focus();
+    }
   };
 
   const handleSaveTitle = () => {
@@ -43,6 +48,12 @@ const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, togg
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
+  };
+
+  const handleTitleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSaveTitle();
+    }
   };
 
   const handleDeleteList = () => {
@@ -55,10 +66,12 @@ const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, togg
         <Grid container alignItems="center" justifyContent="space-between">
           <Grid item>
             {isEditingTitle ? (
-              <div>
-                <TextField value={title} onChange={handleTitleChange} />
-                <Button onClick={handleSaveTitle}>Save</Button>
-              </div>
+              <TextField
+                value={title}
+                onChange={handleTitleChange}
+                onKeyPress={handleTitleKeyPress}
+                inputRef={titleInputRef}
+              />
             ) : (
               <Typography variant="h5" onClick={handleEditTitle}>
                 {list.title}

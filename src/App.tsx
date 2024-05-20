@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { DropResult } from 'react-beautiful-dnd';
 import Board from './components/Board';
 
 interface Task {
@@ -17,7 +16,6 @@ interface List {
 
 const App: React.FC = () => {
   const [lists, setLists] = useState<List[]>([
-    // Initial state with some lists and tasks
   ]);
 
   const addList = (title: string) => {
@@ -90,52 +88,37 @@ const App: React.FC = () => {
     setLists(updatedLists);
   };
 
-  const onDragEnd = (result: DropResult) => {
-    const { source, destination, draggableId, type } = result;
+  const onDragEnd = (result: any) => {
+    const { source, destination } = result;
 
-    if (!destination) {
-      return;
+    if (!destination) return;
+
+    if (source.droppableId === destination.droppableId) {
+      const list = lists.find(list => list.id === parseInt(source.droppableId));
+      if (!list) return;
+      const tasks = Array.from(list.tasks);
+      const [movedTask] = tasks.splice(source.index, 1);
+      tasks.splice(destination.index, 0, movedTask);
+
+      setLists(lists.map(l => l.id === list.id ? { ...l, tasks } : l));
+    } else {
+      const sourceList = lists.find(list => list.id === parseInt(source.droppableId));
+      const destinationList = lists.find(list => list.id === parseInt(destination.droppableId));
+      if (!sourceList || !destinationList) return;
+
+      const sourceTasks = Array.from(sourceList.tasks);
+      const [movedTask] = sourceTasks.splice(source.index, 1);
+      const destinationTasks = Array.from(destinationList.tasks);
+      destinationTasks.splice(destination.index, 0, movedTask);
+
+      setLists(lists.map(list => {
+        if (list.id === sourceList.id) return { ...list, tasks: sourceTasks };
+        if (list.id === destinationList.id) return { ...list, tasks: destinationTasks };
+        return list;
+      }));
     }
-
-    if (type === 'list') {
-      // Handle list reordering if needed
-      return;
-    }
-
-    const sourceListId = parseInt(source.droppableId, 10);
-    const destinationListId = parseInt(destination.droppableId, 10);
-
-    const sourceList = lists.find(list => list.id === sourceListId);
-    const destinationList = lists.find(list => list.id === destinationListId);
-
-    if (!sourceList || !destinationList) {
-      return;
-    }
-
-    const task = sourceList.tasks.find(task => task.id === parseInt(draggableId, 10));
-
-    if (!task) {
-      return;
-    }
-
-    const newSourceTasks = Array.from(sourceList.tasks);
-    newSourceTasks.splice(source.index, 1);
-
-    const newDestinationTasks = Array.from(destinationList.tasks);
-    newDestinationTasks.splice(destination.index, 0, task);
-
-    const newLists = lists.map(list => {
-      if (list.id === sourceListId) {
-        return { ...list, tasks: newSourceTasks };
-      }
-      if (list.id === destinationListId) {
-        return { ...list, tasks: newDestinationTasks };
-      }
-      return list;
-    });
-
-    setLists(newLists);
   };
+
 
   return (
     <Board

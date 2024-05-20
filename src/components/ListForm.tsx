@@ -19,12 +19,13 @@ const ListForm: React.FC<Props> = ({ addList }) => {
   return (
     <form onSubmit={handleSubmit}>
       <TextField
-        label="New List"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        fullWidth
+      label="New List"
+      value={title}
+      onChange={(e) => setTitle(e.target.value)}
+      fullWidth
+      style={{ marginTop: '10px', marginLeft: "10px", minWidth: '300px' }}
       />
-      <Button type="submit" variant="contained" color="primary" style={{ marginTop: '10px' }}>
+      <Button type="submit" variant="contained" color="primary" style={{ marginTop: '10px', marginLeft: "10px", marginBottom: "10px" }}>
         Add List
       </Button>
     </form>

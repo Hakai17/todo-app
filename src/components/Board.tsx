@@ -30,30 +30,43 @@ interface Props {
 
 const Board: React.FC<Props> = ({ lists, addList, addTask, updateTask, deleteTask, toggleTask, deleteList, updateListTitle, onDragEnd }) => {
   return (
-    <div>
-      <ListForm addList={addList} />
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="board" direction="horizontal" type="list">
-          {(provided) => (
-            <div ref={provided.innerRef} {...provided.droppableProps} style={{ display: 'flex', overflowX: 'auto' }}>
-              {lists.map((list, index) => (
-                <div key={list.id} style={{ margin: '0 10px' }}>
-                  <TaskList
-                    list={list}
-                    addTask={addTask}
-                    updateTask={updateTask}
-                    deleteTask={deleteTask}
-                    toggleTask={toggleTask}
-                    deleteList={deleteList}
-                    updateListTitle={updateListTitle}
-                  />
-                </div>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+    <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'row' }}>
+      <div style={{ marginRight: '10px'}}>
+        <ListForm addList={addList} />
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', padding: '10px', flex: '1' }}>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="board" direction="horizontal" type="list">
+            {(provided) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                style={{
+                  display: 'flex',
+                  flexWrap: 'nowrap',
+                  gap: '10px',
+                  maxWidth: '100%',
+                }}
+              >
+                {lists.map((list, index) => (
+                  <div key={list.id} style={{ maxHeight: '400px' }}>
+                    <TaskList
+                      list={list}
+                      addTask={addTask}
+                      updateTask={updateTask}
+                      deleteTask={deleteTask}
+                      toggleTask={toggleTask}
+                      deleteList={deleteList}
+                      updateListTitle={updateListTitle}
+                    />
+                  </div>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </div>
     </div>
   );
 };
