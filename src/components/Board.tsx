@@ -31,9 +31,6 @@ interface Props {
 const Board: React.FC<Props> = ({ lists, addList, addTask, updateTask, deleteTask, toggleTask, deleteList, updateListTitle, onDragEnd }) => {
   return (
     <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'row' }}>
-      <div style={{ marginRight: '10px'}}>
-        <ListForm addList={addList} />
-      </div>
       <div style={{ display: 'flex', flexDirection: 'column', padding: '10px', flex: '1' }}>
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="board" direction="horizontal" type="list">
@@ -71,6 +68,9 @@ const Board: React.FC<Props> = ({ lists, addList, addTask, updateTask, deleteTas
                   </Draggable>
                 ))}
                 {provided.placeholder}
+                <div style={{ minWidth: '300px', maxHeight: '400px' }}>
+                  <ListForm addList={addList} />
+                </div>
               </div>
             )}
           </Droppable>

@@ -84,7 +84,6 @@ const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, togg
             </IconButton>
           </Grid>
         </Grid>
-        <TaskForm listId={list.id} addTask={addTask} />
         <Droppable droppableId={String(list.id)} type="task">
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps} style={{ marginTop: '10px', maxHeight: '400px', overflowY: 'auto' }}>
@@ -112,6 +111,7 @@ const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, togg
             </div>
           )}
         </Droppable>
+        <TaskForm listId={list.id} addTask={addTask} />
       </CardContent>
     </Card>
   );
