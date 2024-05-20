@@ -10,6 +10,7 @@ interface Task {
   text: string;
   description: string;
   completed: boolean;
+  members: { id: number; name: string }[];
 }
 
 interface List {
@@ -21,7 +22,7 @@ interface List {
 interface Props {
   list: List;
   addTask: (listId: number, text: string) => void;
-  updateTask: (listId: number, taskId: number, text: string, description: string) => void;
+  updateTask: (listId: number, taskId: number, text: string, description: string, members: { id: number; name: string }[]) => void;
   deleteTask: (listId: number, taskId: number) => void;
   toggleTask: (listId: number, taskId: number) => void;
   deleteList: (listId: number) => void;
@@ -35,7 +36,6 @@ const TaskList: React.FC<Props> = ({ list, addTask, updateTask, deleteTask, togg
 
   const handleEditTitle = () => {
     setIsEditingTitle(true);
-    // Focar no input do título quando começar a edição
     if (titleInputRef.current) {
       titleInputRef.current.focus();
     }

@@ -7,6 +7,7 @@ interface Task {
   text: string;
   description: string;
   completed: boolean;
+  members: { id: number; name: string }[];
 }
 
 interface List {
@@ -16,8 +17,7 @@ interface List {
 }
 
 const App: React.FC = () => {
-  const [lists, setLists] = useState<List[]>([
-  ]);
+  const [lists, setLists] = useState<List[]>([]);
 
   const addList = (title: string) => {
     const newList: List = {
@@ -33,7 +33,8 @@ const App: React.FC = () => {
       id: Date.now(),
       text,
       description: '',
-      completed: false
+      completed: false,
+      members: []
     };
     const updatedLists = lists.map(list =>
       list.id === listId ? { ...list, tasks: [...list.tasks, newTask] } : list
@@ -41,13 +42,13 @@ const App: React.FC = () => {
     setLists(updatedLists);
   };
 
-  const updateTask = (listId: number, taskId: number, text: string, description: string) => {
+  const updateTask = (listId: number, taskId: number, text: string, description: string, members: { id: number; name: string }[]) => {
     const updatedLists = lists.map(list =>
       list.id === listId
         ? {
             ...list,
             tasks: list.tasks.map(task =>
-              task.id === taskId ? { ...task, text, description } : task
+              task.id === taskId ? { ...task, text, description, members } : task
             )
           }
         : list

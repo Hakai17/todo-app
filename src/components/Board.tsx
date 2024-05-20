@@ -8,6 +8,7 @@ interface Task {
   text: string;
   description: string;
   completed: boolean;
+  members: { id: number; name: string }[];
 }
 
 interface List {
@@ -20,7 +21,7 @@ interface Props {
   lists: List[];
   addList: (title: string) => void;
   addTask: (listId: number, text: string) => void;
-  updateTask: (listId: number, taskId: number, text: string, description: string) => void;
+  updateTask: (listId: number, taskId: number, text: string, description: string, members: { id: number; name: string }[]) => void;
   deleteTask: (listId: number, taskId: number) => void;
   toggleTask: (listId: number, taskId: number) => void;
   deleteList: (listId: number) => void;
