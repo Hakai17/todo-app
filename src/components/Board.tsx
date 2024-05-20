@@ -1,5 +1,5 @@
 import React from 'react';
-import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import ListForm from './ListForm';
 import TaskList from './TaskList';
 
@@ -49,17 +49,26 @@ const Board: React.FC<Props> = ({ lists, addList, addTask, updateTask, deleteTas
                 }}
               >
                 {lists.map((list, index) => (
-                  <div key={list.id} style={{ maxHeight: '400px' }}>
-                    <TaskList
-                      list={list}
-                      addTask={addTask}
-                      updateTask={updateTask}
-                      deleteTask={deleteTask}
-                      toggleTask={toggleTask}
-                      deleteList={deleteList}
-                      updateListTitle={updateListTitle}
-                    />
-                  </div>
+                  <Draggable key={list.id} draggableId={String(list.id)} index={index}>
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={{ ...provided.draggableProps.style, maxHeight: '400px' }}
+                      >
+                        <TaskList
+                          list={list}
+                          addTask={addTask}
+                          updateTask={updateTask}
+                          deleteTask={deleteTask}
+                          toggleTask={toggleTask}
+                          deleteList={deleteList}
+                          updateListTitle={updateListTitle}
+                        />
+                      </div>
+                    )}
+                  </Draggable>
                 ))}
                 {provided.placeholder}
               </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Board from './components/Board';
+import { DropResult } from 'react-beautiful-dnd';
 
 interface Task {
   id: number;
@@ -88,12 +89,17 @@ const App: React.FC = () => {
     setLists(updatedLists);
   };
 
-  const onDragEnd = (result: any) => {
+  const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
 
     if (!destination) return;
 
-    if (source.droppableId === destination.droppableId) {
+    if (source.droppableId === destination.droppableId && source.droppableId === 'board') {
+      const newLists = Array.from(lists);
+      const [movedList] = newLists.splice(source.index, 1);
+      newLists.splice(destination.index, 0, movedList);
+      setLists(newLists);
+    } else if (source.droppableId === destination.droppableId) {
       const list = lists.find(list => list.id === parseInt(source.droppableId));
       if (!list) return;
       const tasks = Array.from(list.tasks);
@@ -118,7 +124,6 @@ const App: React.FC = () => {
       }));
     }
   };
-
 
   return (
     <Board
