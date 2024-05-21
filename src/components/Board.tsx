@@ -1,7 +1,7 @@
 import React from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import ListForm from './ListForm';
-import Tasklist from './TaskList';
+import TaskList from './TaskList';
 
 interface Task {
   id: number;
@@ -35,7 +35,7 @@ const Board: React.FC<Props> = ({ lists, addList, addTask, updateTask, deleteTas
     <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'row' }}>
       <div style={{ display: 'flex', flexDirection: 'column', padding: '10px', flex: '1' }}>
         <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="board" direction="horizontal" type="lists">
+          <Droppable droppableId="board" direction="horizontal" type="list">
             {(provided) => (
               <div
                 ref={provided.innerRef}
@@ -56,7 +56,7 @@ const Board: React.FC<Props> = ({ lists, addList, addTask, updateTask, deleteTas
                         {...provided.dragHandleProps}
                         style={{ ...provided.draggableProps.style, maxHeight: '400px' }}
                       >
-                        <Tasklist
+                        <TaskList
                           lists={lists}
                           addTask={addTask}
                           updateTask={updateTask}

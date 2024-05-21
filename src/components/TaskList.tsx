@@ -62,7 +62,7 @@ const TaskList: React.FC<Props> = ({ lists, addTask, updateTask, deleteTask, tog
   };
 
   return (
-    <Card style={{ backgroundColor: '#e6e6e6', marginBottom: '20px', minWidth: '300px' }}>
+    <Card style={{ backgroundColor: '#e6e6e6', marginBottom: '20px', maxWidth: '400px' }}>
       <CardContent>
         <Grid container alignItems="center" justifyContent="space-between">
           <Grid item>
@@ -70,7 +70,7 @@ const TaskList: React.FC<Props> = ({ lists, addTask, updateTask, deleteTask, tog
               <TextField
                 value={title}
                 onChange={handleTitleChange}
-                onKeyPress={handleTitleKeyPress}
+                onKeyDown={handleTitleKeyPress}
                 inputRef={titleInputRef}
               />
             ) : (
@@ -87,7 +87,7 @@ const TaskList: React.FC<Props> = ({ lists, addTask, updateTask, deleteTask, tog
         </Grid>
         <Droppable droppableId={String(lists.id)} type="task">
           {(provided) => (
-            <div ref={provided.innerRef} {...provided.droppableProps} style={{ marginTop: '10px', maxHeight: '400px', overflowY: 'auto' }}>
+            <div ref={provided.innerRef} {...provided.droppableProps} style={{ marginTop: '10px', marginBottom: '10px', maxHeight: '400px', overflowY: 'auto' }}>
               {lists.tasks.map((task, index) => (
                 <Draggable key={task.id} draggableId={String(task.id)} index={index}>
                   {(provided: DraggableProvided) => (

@@ -17,7 +17,7 @@ interface List {
   tasks: Task[];
 }
 
-const App: React.FC = ( task ) => {
+const App: React.FC = () => {
   const [lists, setLists] = useState<List[]>([]);
 
   const addList = (title: string) => {

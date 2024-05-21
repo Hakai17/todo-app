@@ -66,7 +66,11 @@ const TaskItem: React.FC<Props> = ({ task, listId, updateTask, deleteTask }) => 
 
   return (
     <>
-      <ListItem style={{ backgroundColor: '#f5f5f5', marginBottom: '10px' }}>
+      <div style={{ backgroundColor: '#f5f5f5', borderRadius: '10px' }}>
+        {labels.map(label => (
+          <Chip key={label.id} label={label.text} style={{ backgroundColor: label.color, color: '#fff', minWidth: '100px', maxHeight: '20px', marginTop: '5px', marginLeft: '5px', borderRadius: '5px' }} />
+        ))}
+      <ListItem>
       <ListItemText
           primary={
             <>
@@ -77,20 +81,13 @@ const TaskItem: React.FC<Props> = ({ task, listId, updateTask, deleteTask }) => 
                     icon={<PersonIcon />}
                     label={member.name}
                     size="small"
-                    style={{ marginLeft: '5px' }}
                   />
                 ))}
               </div>
               {task.text}
             </>
           }
-          secondary={task.description}
         />
-        <div>
-          {labels.map(label => (
-            <Chip key={label.id} label={label.text} style={{ backgroundColor: label.color, color: '#fff' }} />
-          ))}
-        </div>
         <IconButton onClick={handleEdit}>
           <EditIcon />
         </IconButton>
@@ -134,7 +131,7 @@ const TaskItem: React.FC<Props> = ({ task, listId, updateTask, deleteTask }) => 
             onChange={(e) => setDescription(e.target.value)}
           />
           <div>
-            <Button onClick={handleAddLabel} color="primary">
+            <Button type="submit" variant="contained" onClick={handleAddLabel} color="primary">
               Add Label
             </Button>
             {labels.map(label => (
@@ -175,6 +172,7 @@ const TaskItem: React.FC<Props> = ({ task, listId, updateTask, deleteTask }) => 
           </Button>
         </DialogActions>
       </Dialog>
+      </div>
     </>
   );
 };
