@@ -62,7 +62,7 @@ const TaskList: React.FC<Props> = ({ lists, addTask, updateTask, deleteTask, tog
   };
 
   return (
-    <Card style={{ backgroundColor: '#e6e6e6', marginBottom: '20px', maxWidth: '400px' }}>
+    <Card style={{ backgroundColor: '#e6e6e6', marginBottom: '20px', maxWidth: '300px', minWidth: '300px' }}>
       <CardContent>
         <Grid container alignItems="center" justifyContent="space-between">
           <Grid item>

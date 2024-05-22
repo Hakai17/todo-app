@@ -19,6 +19,7 @@ interface List {
 
 const App: React.FC = () => {
   const [lists, setLists] = useState<List[]>([]);
+  const [selectedMember, setSelectedMember] = useState<number | null>(null);
 
   const addList = (title: string) => {
     const newList: List = {
@@ -139,6 +140,8 @@ const App: React.FC = () => {
       deleteList={deleteList}
       updateListTitle={updateListTitle}
       onDragEnd={onDragEnd}
+      selectedMember={selectedMember}
+      setSelectedMember={setSelectedMember}
     />
   );
 };

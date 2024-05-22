@@ -1,7 +1,8 @@
-import React from 'react';
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-import ListForm from './ListForm';
+import React, {useState} from 'react';
 import TaskList from './TaskList';
+import ListForm from './ListForm';
+import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
+import Header from './Header'
 
 interface Task {
   id: number;
@@ -12,28 +13,65 @@ interface Task {
   labels: { id: number; text: string; color: string }[];
 }
 
-interface lists {
+interface List {
   id: number;
   title: string;
   tasks: Task[];
 }
 
-interface Props {
-  lists: lists[];
-  addList: (title: string) => void;
-  addTask: (listsId: number, text: string) => void;
-  updateTask: (listsId: number, taskId: number, text: string, description: string, members: { id: number; name: string }[], labels: { id: number; text: string; color: string }[]) => void;
-  deleteTask: (listsId: number, taskId: number) => void;
-  toggleTask: (listsId: number, taskId: number) => void;
-  deleteList: (listsId: number) => void;
-  updateListTitle: (listsId: number, newTitle: string) => void;
-  onDragEnd: (result: DropResult) => void;
+interface Member {
+  id: number;
+  name: string;
 }
 
-const Board: React.FC<Props> = ({ lists, addList, addTask, updateTask, deleteTask, toggleTask, deleteList, updateListTitle, onDragEnd }) => {
+interface Props {
+  lists: List[];
+  addList: (title: string) => void;
+  addTask: (listId: number, text: string) => void;
+  updateTask: (listId: number, taskId: number, text: string, description: string, members: { id: number; name: string }[], labels: { id: number; text: string; color: string }[]) => void;
+  deleteTask: (listId: number, taskId: number) => void;
+  toggleTask: (listId: number, taskId: number) => void;
+  deleteList: (listId: number) => void;
+  updateListTitle: (listId: number, title: string) => void;
+  onDragEnd: (result: DropResult) => void;
+  selectedMember: number | null;
+  setSelectedMember: React.Dispatch<React.SetStateAction<number | null>>;
+}
+
+const Board: React.FC<Props> = ({
+  lists, addList, addTask, updateTask, deleteTask, toggleTask, deleteList, updateListTitle, onDragEnd,
+  selectedMember, setSelectedMember
+}) => {
+  const [boardTitle, setBoardTitle] = useState('Miguel Board');
+  const [members, setMembers] = useState<Member[]>([
+    { id: 1, name: 'Alice' },
+    { id: 2, name: 'Bob' },
+    { id: 3, name: 'Charlie' },
+  ]);
+
+  const updateBoardTitle = (newTitle: string) => {
+    setBoardTitle(newTitle);
+  };
+
+  const filteredLists = lists.map(list => ({
+    ...list,
+    tasks: list.tasks.filter(task => {
+      if (selectedMember !== null && !task.members.some(member => member.id === selectedMember)) {
+        return false;
+      }
+      return true;
+    })
+  }));
+
   return (
-    <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'row' }}>
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'row' }}>
       <div style={{ display: 'flex', flexDirection: 'column', padding: '10px', flex: '1' }}>
+        <Header
+          title={boardTitle}
+          onUpdateTitle={updateBoardTitle}
+          members={members}
+          setSelectedMember={setSelectedMember}
+        />
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="board" direction="horizontal" type="list">
             {(provided) => (
@@ -47,8 +85,8 @@ const Board: React.FC<Props> = ({ lists, addList, addTask, updateTask, deleteTas
                   maxWidth: '100%',
                 }}
               >
-                {lists.map((lists, index) => (
-                  <Draggable key={lists.id} draggableId={String(lists.id)} index={index}>
+                {filteredLists.map((list, index) => (
+                  <Draggable key={list.id} draggableId={String(list.id)} index={index}>
                     {(provided) => (
                       <div
                         ref={provided.innerRef}
@@ -57,7 +95,7 @@ const Board: React.FC<Props> = ({ lists, addList, addTask, updateTask, deleteTas
                         style={{ ...provided.draggableProps.style, maxHeight: '400px' }}
                       >
                         <TaskList
-                          lists={lists}
+                          lists={list}
                           addTask={addTask}
                           updateTask={updateTask}
                           deleteTask={deleteTask}
@@ -70,7 +108,7 @@ const Board: React.FC<Props> = ({ lists, addList, addTask, updateTask, deleteTas
                   </Draggable>
                 ))}
                 {provided.placeholder}
-                <div style={{ minWidth: '300px', maxHeight: '400px' }}>
+                <div style={{ minWidth: '300px' }}>
                   <ListForm addList={addList} />
                 </div>
               </div>

@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { TextField, Button } from '@mui/material';
 
 interface Props {
-  addTask: (listId: number, text: string) => void;
   listId: number;
+  addTask: (listId: number, text: string) => void;
 }
 
-const TaskForm: React.FC<Props> = ({ addTask, listId }) => {
+const TaskForm: React.FC<Props> = ({ listId, addTask }) => {
   const [text, setText] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -18,11 +18,11 @@ const TaskForm: React.FC<Props> = ({ addTask, listId }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} style={{ marginTop: '10px' }}>
       <TextField
-        label="New Task"
         value={text}
         onChange={(e) => setText(e.target.value)}
+        placeholder="Add a new task"
         fullWidth
       />
       <Button type="submit" variant="contained" color="primary" style={{ marginTop: '10px' }}>
