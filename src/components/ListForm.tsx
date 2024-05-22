@@ -19,14 +19,14 @@ const ListForm: React.FC<Props> = ({ addList }) => {
   return (
     <form onSubmit={handleSubmit}>
       <TextField
-      label="New List"
+      label="Insira o título da lista"
       value={title}
       onChange={(e) => setTitle(e.target.value)}
       fullWidth
-      style={{ minWidth: '300px' }}
+      style={{ minWidth: '200px' }}
       />
       <Button type="submit" variant="contained" color="primary" style={{ marginTop: '10px' }}>
-        Add List
+        Adicionar lista
       </Button>
     </form>
   );

@@ -22,11 +22,11 @@ const TaskForm: React.FC<Props> = ({ listId, addTask }) => {
       <TextField
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="Add a new task"
+        placeholder="Insira um título para este cartão"
         fullWidth
       />
       <Button type="submit" variant="contained" color="primary" style={{ marginTop: '10px' }}>
-        Add Task
+        Adicionar cartão
       </Button>
     </form>
   );

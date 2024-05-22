@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Board from './components/Board';
 import { DropResult } from 'react-beautiful-dnd';
 import Header from './components/Header';
+import './App.css'
 
 interface Task {
   id: number;
@@ -21,7 +22,7 @@ interface List {
 const App: React.FC = () => {
   const [lists, setLists] = useState<List[]>([]);
   const [selectedMember, setSelectedMember] = useState<number | null>(null);
-  const [boardTitle, setBoardTitle] = useState('Miguel Board');
+  const [boardTitle, setBoardTitle] = useState('QUADRO MIGUEL');
   const [members] = useState([
     { id: 1, name: 'Alice' },
     { id: 2, name: 'Bob' },

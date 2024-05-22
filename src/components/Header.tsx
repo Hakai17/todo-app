@@ -54,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', borderBottom: '1px solid #ccc' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', borderBottom: '1px solid #ccc', backgroundColor: '#888677', fontFamily: 'monospace' }}>
       <div>
         {editTitle ? (
           <TextField
@@ -71,6 +71,7 @@ const Header: React.FC<HeaderProps> = ({
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <IconButton onClick={handleFilterClick}>
           <FilterListIcon />
+          Filtros
         </IconButton>
         <Menu
           anchorEl={anchorEl}
@@ -92,7 +93,7 @@ const Header: React.FC<HeaderProps> = ({
               />
             ))}
             <Chip
-              label="Clear"
+              label="Limpar"
               onClick={clearFilter}
               style={{ marginLeft: '5px', backgroundColor: '#f44336', color: '#fff' }}
             />

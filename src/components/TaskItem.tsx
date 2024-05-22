@@ -3,6 +3,7 @@ import { ListItem, ListItemText, IconButton, TextField, Dialog, DialogActions, D
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import PersonIcon from '@mui/icons-material/Person';
+import { Fullscreen } from '@mui/icons-material';
 
 interface Task {
   id: number;
@@ -52,7 +53,7 @@ const TaskItem: React.FC<Props> = ({ task, listId, updateTask, deleteTask }) => 
   };
 
   const handleAddLabel = () => {
-    const newLabel = { id: Date.now(), text: '', color: 'default' };
+    const newLabel = { id: Date.now(), text: '', color: 'red' };
     setLabels([...labels, newLabel]);
   };
 
@@ -66,9 +67,9 @@ const TaskItem: React.FC<Props> = ({ task, listId, updateTask, deleteTask }) => 
 
   return (
     <>
-      <div style={{ backgroundColor: '#f5f5f5', borderRadius: '10px' }}>
+      <div style={{ backgroundColor: '#e2e2e2', borderRadius: '10px' }}>
         {labels.map(label => (
-          <Chip key={label.id} label={label.text} style={{ backgroundColor: label.color, color: '#fff', minWidth: '100px', maxHeight: '20px', marginTop: '5px', marginLeft: '5px', borderRadius: '5px' }} />
+          <Chip key={label.id} label={label.text} style={{ backgroundColor: label.color, color: 'white', minWidth: '100px', maxHeight: '20px', marginTop: '5px', marginLeft: '5px', borderRadius: '5px' }} />
         ))}
       <ListItem>
       <ListItemText
@@ -96,7 +97,7 @@ const TaskItem: React.FC<Props> = ({ task, listId, updateTask, deleteTask }) => 
         </IconButton>
       </ListItem>
       <Dialog open={isEditing} onClose={handleClose}>
-        <DialogTitle>Edit Task</DialogTitle>
+        <DialogTitle>Editar cartão</DialogTitle>
         <DialogContent>
           <Autocomplete
             multiple
@@ -108,7 +109,7 @@ const TaskItem: React.FC<Props> = ({ task, listId, updateTask, deleteTask }) => 
               <TextField
                 {...params}
                 margin="dense"
-                label="Members"
+                label="Membros"
                 placeholder="Select members"
                 fullWidth
               />
@@ -116,7 +117,7 @@ const TaskItem: React.FC<Props> = ({ task, listId, updateTask, deleteTask }) => 
           />
           <TextField
             margin="dense"
-            label="Title"
+            label="Título"
             type="text"
             fullWidth
             value={text}
@@ -124,7 +125,7 @@ const TaskItem: React.FC<Props> = ({ task, listId, updateTask, deleteTask }) => 
           />
           <TextField
             margin="dense"
-            label="Description"
+            label="Descrição"
             type="text"
             fullWidth
             value={description}
@@ -132,13 +133,13 @@ const TaskItem: React.FC<Props> = ({ task, listId, updateTask, deleteTask }) => 
           />
           <div>
             <Button type="submit" variant="contained" onClick={handleAddLabel} color="primary">
-              Add Label
+              Etiqueta
             </Button>
             {labels.map(label => (
               <div key={label.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                 <TextField
                   margin="dense"
-                  label="Label Text"
+                  label="Adicionar etiqueta"
                   type="text"
                   value={label.text}
                   onChange={(e) => handleLabelChange(label.id, 'text', e.target.value)}
@@ -149,12 +150,11 @@ const TaskItem: React.FC<Props> = ({ task, listId, updateTask, deleteTask }) => 
                   onChange={(e) => handleLabelChange(label.id, 'color', e.target.value as string)}
                   style={{ marginRight: '10px' }}
                 >
-                  <MenuItem value="default">Default</MenuItem>
-                  <MenuItem value="red">Red</MenuItem>
-                  <MenuItem value="green">Green</MenuItem>
-                  <MenuItem value="blue">Blue</MenuItem>
-                  <MenuItem value="yellow">Yellow</MenuItem>
-                  <MenuItem value="purple">Purple</MenuItem>
+                  <MenuItem value="red">Vermelho</MenuItem>
+                  <MenuItem value="green">Verde</MenuItem>
+                  <MenuItem value="blue">Azul</MenuItem>
+                  <MenuItem value="yellow">Amarelo</MenuItem>
+                  <MenuItem value="purple">Roxo</MenuItem>
                 </Select>
                 <IconButton onClick={() => handleDeleteLabel(label.id)}>
                   <DeleteIcon />
@@ -165,10 +165,10 @@ const TaskItem: React.FC<Props> = ({ task, listId, updateTask, deleteTask }) => 
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Cancel
+            Cancelar
           </Button>
           <Button onClick={handleSave} color="primary">
-            Save
+            Salvar
           </Button>
         </DialogActions>
       </Dialog>

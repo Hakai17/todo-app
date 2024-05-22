@@ -56,10 +56,9 @@ const Board: React.FC<Props> = ({
                 {...provided.droppableProps}
                 style={{
                   display: 'flex',
-                  flexDirection: 'row',
+                  flexWrap: 'nowrap',
                   overflowX: 'auto',
-                  padding: '8px',
-                  height: '100%',
+                  gap: '10px',
                 }}
               >
                 {filteredLists.map((list, index) => (
@@ -70,8 +69,7 @@ const Board: React.FC<Props> = ({
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                         style={{
-                          ...provided.draggableProps.style,
-                          margin: '0 8px',
+                          ...provided.draggableProps.style
                         }}
                       >
                         <TaskList
