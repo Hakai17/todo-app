@@ -62,7 +62,7 @@ const TaskList: React.FC<Props> = ({ lists, addTask, updateTask, deleteTask, tog
   };
 
   return (
-    <Card style={{ backgroundColor: '#888677', marginBottom: '20px', width: '300px', maxHeight: '100%', borderRadius: '20px' }}>
+    <Card style={{ backgroundColor: '#888677', marginBottom: '20px', width: '300px', borderRadius: '20px' }}>
       <CardContent>
         <Grid container alignItems="center" justifyContent="space-between">
           <Grid item>
@@ -87,7 +87,7 @@ const TaskList: React.FC<Props> = ({ lists, addTask, updateTask, deleteTask, tog
         </Grid>
         <Droppable droppableId={String(lists.id)} type="task">
           {(provided) => (
-            <div ref={provided.innerRef} {...provided.droppableProps} style={{ marginTop: '10px', marginBottom: '10px', maxHeight: '17rem', overflowY: 'auto' }}>
+            <div ref={provided.innerRef} {...provided.droppableProps} style={{ marginTop: '10px', marginBottom: '10px', maxHeight: '18rem', overflowY: 'auto' }}>
               {lists.tasks.map((task, index) => (
                 <Draggable key={task.id} draggableId={String(task.id)} index={index}>
                   {(provided: DraggableProvided) => (

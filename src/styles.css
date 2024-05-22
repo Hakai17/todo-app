@@ -1,0 +1,110 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+    background-color: #f3eae8;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Estilo do Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    background-color: #888677;
+}
+
+.header h2 {
+    margin: 0;
+    cursor: pointer;
+}
+
+.header .filters {
+    display: flex;
+    align-items: center;
+}
+
+.header .filters .chip {
+    margin-left: 5px;
+}
+
+/* Estilo do Board */
+.board {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 10px;
+    overflow-x: auto;
+}
+
+.lists {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    overflow-x: auto;
+}
+
+.list {
+    background-color: #888677;
+    margin-bottom: 20px;
+    width: 300px;
+    border-radius: 20px;
+}
+
+@media (max-width: 768px) {
+    .lists {
+      flex-direction: column;
+      align-items: center;
+    }
+}
+
+/* Estilos para navegadores WebKit */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent; /* Torna o trilho transparente */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+}
+
+/* Estilos para navegadores que suportam as propriedades padrão */
+body {
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent; /* Define a cor do trilho como transparente */
+}
+
+body::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+body::-webkit-scrollbar-track {
+    background: transparent; /* Torna o trilho transparente */
+}
+
+body::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+}

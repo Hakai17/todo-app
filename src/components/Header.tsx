@@ -54,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', borderBottom: '1px solid #ccc', backgroundColor: '#888677', fontFamily: 'monospace' }}>
+    <div className='header'>
       <div>
         {editTitle ? (
           <TextField
@@ -68,7 +68,7 @@ const Header: React.FC<HeaderProps> = ({
           <h2 onClick={() => setEditTitle(true)}>{title}</h2>
         )}
       </div>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div className='filters'>
         <IconButton onClick={handleFilterClick}>
           <FilterListIcon />
           Filtros
@@ -89,7 +89,7 @@ const Header: React.FC<HeaderProps> = ({
                 avatar={<Avatar>{member.name[0]}</Avatar>}
                 label={member.name}
                 onClick={() => handleMemberSelect(member.id)}
-                style={{ marginLeft: '5px' }}
+                className='chip'
               />
             ))}
             <Chip

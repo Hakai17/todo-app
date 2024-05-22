@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import './styles.css'
 import Board from './components/Board';
 import { DropResult } from 'react-beautiful-dnd';
 import Header from './components/Header';
-import './App.css'
 
 interface Task {
   id: number;
@@ -142,7 +142,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className='container'>
       <Header
         title={boardTitle}
         onUpdateTitle={updateBoardTitle}

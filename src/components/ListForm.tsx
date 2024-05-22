@@ -23,7 +23,7 @@ const ListForm: React.FC<Props> = ({ addList }) => {
       value={title}
       onChange={(e) => setTitle(e.target.value)}
       fullWidth
-      style={{ minWidth: '200px' }}
+      style={{ minWidth: '300px' }}
       />
       <Button type="submit" variant="contained" color="primary" style={{ marginTop: '10px' }}>
         Adicionar lista

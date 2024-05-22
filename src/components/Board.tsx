@@ -46,20 +46,14 @@ const Board: React.FC<Props> = ({
   }));
 
   return (
-    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'row' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', padding: '10px', flex: '1' }}>
+      <div className='board'>
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="board" direction="horizontal" type="list">
             {(provided) => (
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                style={{
-                  display: 'flex',
-                  flexWrap: 'nowrap',
-                  overflowX: 'auto',
-                  gap: '10px',
-                }}
+                className='lists'
               >
                 {filteredLists.map((list, index) => (
                   <Draggable key={list.id} draggableId={list.id.toString()} index={index}>
@@ -92,7 +86,6 @@ const Board: React.FC<Props> = ({
           </Droppable>
         </DragDropContext>
       </div>
-    </div>
   );
 };
 

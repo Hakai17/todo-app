@@ -3,7 +3,6 @@ import { ListItem, ListItemText, IconButton, TextField, Dialog, DialogActions, D
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import PersonIcon from '@mui/icons-material/Person';
-import { Fullscreen } from '@mui/icons-material';
 
 interface Task {
   id: number;
