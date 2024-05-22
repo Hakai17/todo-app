@@ -1,8 +1,7 @@
-import React, {useState} from 'react';
+import React from 'react';
 import TaskList from './TaskList';
 import ListForm from './ListForm';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
-import Header from './Header'
 
 interface Task {
   id: number;
@@ -19,11 +18,6 @@ interface List {
   tasks: Task[];
 }
 
-interface Member {
-  id: number;
-  name: string;
-}
-
 interface Props {
   lists: List[];
   addList: (title: string) => void;
@@ -35,24 +29,12 @@ interface Props {
   updateListTitle: (listId: number, title: string) => void;
   onDragEnd: (result: DropResult) => void;
   selectedMember: number | null;
-  setSelectedMember: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 const Board: React.FC<Props> = ({
   lists, addList, addTask, updateTask, deleteTask, toggleTask, deleteList, updateListTitle, onDragEnd,
-  selectedMember, setSelectedMember
+  selectedMember
 }) => {
-  const [boardTitle, setBoardTitle] = useState('Miguel Board');
-  const [members, setMembers] = useState<Member[]>([
-    { id: 1, name: 'Alice' },
-    { id: 2, name: 'Bob' },
-    { id: 3, name: 'Charlie' },
-  ]);
-
-  const updateBoardTitle = (newTitle: string) => {
-    setBoardTitle(newTitle);
-  };
-
   const filteredLists = lists.map(list => ({
     ...list,
     tasks: list.tasks.filter(task => {
@@ -66,12 +48,6 @@ const Board: React.FC<Props> = ({
   return (
     <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'row' }}>
       <div style={{ display: 'flex', flexDirection: 'column', padding: '10px', flex: '1' }}>
-        <Header
-          title={boardTitle}
-          onUpdateTitle={updateBoardTitle}
-          members={members}
-          setSelectedMember={setSelectedMember}
-        />
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="board" direction="horizontal" type="list">
             {(provided) => (
@@ -80,19 +56,23 @@ const Board: React.FC<Props> = ({
                 {...provided.droppableProps}
                 style={{
                   display: 'flex',
-                  flexWrap: 'nowrap',
-                  gap: '10px',
-                  maxWidth: '100%',
+                  flexDirection: 'row',
+                  overflowX: 'auto',
+                  padding: '8px',
+                  height: '100%',
                 }}
               >
                 {filteredLists.map((list, index) => (
-                  <Draggable key={list.id} draggableId={String(list.id)} index={index}>
+                  <Draggable key={list.id} draggableId={list.id.toString()} index={index}>
                     {(provided) => (
                       <div
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        style={{ ...provided.draggableProps.style, maxHeight: '400px' }}
+                        style={{
+                          ...provided.draggableProps.style,
+                          margin: '0 8px',
+                        }}
                       >
                         <TaskList
                           lists={list}
@@ -108,9 +88,7 @@ const Board: React.FC<Props> = ({
                   </Draggable>
                 ))}
                 {provided.placeholder}
-                <div style={{ minWidth: '300px' }}>
-                  <ListForm addList={addList} />
-                </div>
+                <ListForm addList={addList} />
               </div>
             )}
           </Droppable>

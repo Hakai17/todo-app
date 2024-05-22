@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Board from './components/Board';
 import { DropResult } from 'react-beautiful-dnd';
+import Header from './components/Header';
 
 interface Task {
   id: number;
@@ -20,6 +21,12 @@ interface List {
 const App: React.FC = () => {
   const [lists, setLists] = useState<List[]>([]);
   const [selectedMember, setSelectedMember] = useState<number | null>(null);
+  const [boardTitle, setBoardTitle] = useState('Miguel Board');
+  const [members] = useState([
+    { id: 1, name: 'Alice' },
+    { id: 2, name: 'Bob' },
+    { id: 3, name: 'Charlie' },
+  ]);
 
   const addList = (title: string) => {
     const newList: List = {
@@ -129,20 +136,31 @@ const App: React.FC = () => {
     }
   };
 
+  const updateBoardTitle = (newTitle: string) => {
+    setBoardTitle(newTitle);
+  };
+
   return (
-    <Board
-      lists={lists}
-      addList={addList}
-      addTask={addTask}
-      updateTask={updateTask}
-      deleteTask={deleteTask}
-      toggleTask={toggleTask}
-      deleteList={deleteList}
-      updateListTitle={updateListTitle}
-      onDragEnd={onDragEnd}
-      selectedMember={selectedMember}
-      setSelectedMember={setSelectedMember}
-    />
+    <div>
+      <Header
+        title={boardTitle}
+        onUpdateTitle={updateBoardTitle}
+        members={members}
+        setSelectedMember={setSelectedMember}
+      />
+      <Board
+        lists={lists}
+        addList={addList}
+        addTask={addTask}
+        updateTask={updateTask}
+        deleteTask={deleteTask}
+        toggleTask={toggleTask}
+        deleteList={deleteList}
+        updateListTitle={updateListTitle}
+        onDragEnd={onDragEnd}
+        selectedMember={selectedMember}
+      />
+    </div>
   );
 };
 
